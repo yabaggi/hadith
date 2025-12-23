@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -44,7 +44,7 @@
     </div>
 
     <script>
-        let currentLang = 'en';
+        let currentLang = localStorage.getItem('currentLang') || 'ar';
 
         // DOM Elements
         const bookStatsContainer = document.getElementById('bookStatsContainer');
@@ -53,6 +53,7 @@
         // Language switching
         function setLanguage(lang) {
             currentLang = lang;
+            localStorage.setItem('currentLang', lang); // Save language preference
             
             // Update body direction
             if (lang === 'ar') {
@@ -88,6 +89,12 @@
                 setLanguage(btn.dataset.lang);
             });
         });
+
+        // Listen for language changes from other pages (e.g., index.html)
+        window.addEventListener('languageChanged', (event) => {
+            setLanguage(event.detail.lang);
+        });
+
 
         async function fetchJSON(filePath) {
             try {
@@ -142,6 +149,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
             loadBookStats();
         });
     </script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -161,7 +161,7 @@
         let allHadiths = {}; // To cache hadiths for each book
         let currentPage = 1;
         let totalPages = 1;
-        let currentLang = 'en';
+        let currentLang = localStorage.getItem('currentLang') || 'ar';
 
         // DOM Elements
         const bookSelect = document.getElementById('bookSelect');
@@ -196,6 +196,7 @@
         // Language switching
         function setLanguage(lang) {
             currentLang = lang;
+            localStorage.setItem('currentLang', lang); // Save language preference
             
             // Update body direction
             if (lang === 'ar') {
@@ -232,6 +233,9 @@
             // Update page info
             updatePageInfo();
             populateBooksDropdown(); // Repopulate books for the new language
+
+            // Dispatch custom event for other pages/components to react
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: lang } }));
         }
 
         function updatePageInfo() {
@@ -618,7 +622,10 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadInitialData);
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadInitialData();
+            setLanguage(currentLang);
+        });
     </script>
 </body>
 </html>
